@@ -1,5 +1,21 @@
-students
-	name, github, heroku link, scorecard
+
+### way 1
+```yml
+circle:
+  cohort, ta_id
+
+circle_student (joins):
+  circle_id, ta_id
+```
+
+### way 2
+```yml
+circle:
+  cohort, ta_id
+
+circle_student (joins):
+  circle_id, ta_id
+```
 
 Questions
   author_id
@@ -17,21 +33,10 @@ Resolution
 	question_id
 	body
 
-standup
-  day (enum)	
-	student_id
-	yesterday
-	today
-	roadblocks
-
-tracking sheet (pretty much just google sheet)
-  planning docs
-	milestones
 
 resolution_tags or question_tags and or both.
 
-Tags/Topics/Keywords
-  category (ex. react, redux, destructuring, etc...)
+
 
 attachments
 	file type (image, md, txt)
@@ -41,3 +46,31 @@ attachments
 
 in the gui, pull up yesterdays things
 after standup pool together
+
+Tags/Topics/Keywords
+  category (ex. react, redux, destructuring, etc...)
+
+standup
+  day (enum)
+	student_id
+	yesterday
+	today
+	roadblocks
+
+tracking sheet (pretty much just google sheet)
+  planning docs
+	milestones
+
+students
+	name, github, heroku link, scorecard
+
+tas
+  name
+
+cohort_student (joins)
+	cohort_id
+	student_id
+
+
+circle_student (joins):
+  circle_id, ta_id
