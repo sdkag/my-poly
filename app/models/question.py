@@ -18,6 +18,7 @@ class MetadataQuestion(db.Model):
     time_question_opened = db.Column(db.String(10))
     time_question_answered = db.Column(db.String(10))
     time_question_closed = db.Column(db.String(10))
+    # date = db.Column(db.Date)
     # categories = db.Column(db.String) enum
     question = db.relationship("Question", backref=db.backref("metadata", uselist=False), uselist=False)
 
@@ -42,13 +43,13 @@ class Resolution(db.Model):
 
 class AttachmentBase(db.Model):
     __tablename__ = 'attachments'
-    __mapper_args__={
+    __mapper_args__= {
         "polymorphic_identity": 'base',
         "polymorphic_on": 'attached_to'  # the descriminator
     }
 
     id = db.Column(db.Integer, primary_key=True)
-    file_ext = db.Column(db.String(10))  #enum
+    file_ext = db.Column(db.String(10))  # enum
     file_link = db.Column(db.String)
 
     attached_to = db.Column(db.String)
@@ -59,19 +60,27 @@ class NoteAttachment(AttachmentBase):
     __mapper_args__ = {
         "polymorphic_identity": 'note_attachment',
     }
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('attachments.id'),
+        primary_key=True)
+
     note_id = db.Column(
         db.Integer,
         db.ForeignKey('notes.id'),
-        primary_key=True
         )
 
 
 class QuestionAttachment(AttachmentBase):
-    _-__tablename__ = 'question_attachment'
+    __tablename__ = 'question_attachment'
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('attachments.id'),
+        primary_key=True)
+
     question_id = db.Column(
         db.Integer,
         db.ForeignKey('questions.id'),
-        primary_key=True
     )
     __mapper_args__ = {
         "polymorphic_identity": 'question_attachment',
@@ -80,7 +89,16 @@ class QuestionAttachment(AttachmentBase):
 
 class ResolutionAttachment(AttachmentBase):
     __tablename__ = 'resolution_attachment'
-    resolution_id = db.Column(db.Integer, db.ForeignKey('resolutions.question_id'), primary_key=True)
+    id = db.Column(
+        db.Integer,
+        db.ForeignKey('attachments.id'),
+        primary_key=True)
+
+    resolution_id = db.Column(
+        db.Integer,
+        db.ForeignKey('resolutions.question_id')
+        )
+
     __mapper_args__ = {
         "polymorphic_identity": 'resolution_attachment',
     }
