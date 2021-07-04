@@ -55,21 +55,32 @@ class AttachmentBase(db.Model):
 
 
 class NoteAttachment(AttachmentBase):
+    __tablename__ = 'note_attachment'
     __mapper_args__ = {
         "polymorphic_identity": 'note_attachment',
     }
-    note_id = db.Column(db.Integer, db.ForeignKey('notes.id'))
+    note_id = db.Column(
+        db.Integer,
+        db.ForeignKey('notes.id'),
+        primary_key=True
+        )
 
 
 class QuestionAttachment(AttachmentBase):
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+    _-__tablename__ = 'question_attachment'
+    question_id = db.Column(
+        db.Integer,
+        db.ForeignKey('questions.id'),
+        primary_key=True
+    )
     __mapper_args__ = {
         "polymorphic_identity": 'question_attachment',
     }
 
 
 class ResolutionAttachment(AttachmentBase):
-    resolution_id = db.Column(db.Integer, db.ForeignKey('resolutions.question_id'))
+    __tablename__ = 'resolution_attachment'
+    resolution_id = db.Column(db.Integer, db.ForeignKey('resolutions.question_id'), primary_key=True)
     __mapper_args__ = {
         "polymorphic_identity": 'resolution_attachment',
     }
