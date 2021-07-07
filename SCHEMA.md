@@ -7,7 +7,6 @@ circle:
 circle_student (joins):
   circle_id, ta_id
 ```
-
 ### way 2
 ```yml
 circle:
