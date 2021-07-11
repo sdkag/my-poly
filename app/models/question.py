@@ -8,19 +8,31 @@ class Question(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     goal = db.Column(db.Text)
     bug = db.Column(db.Text)
-    error_message = db.Column(db.Text) # eventually enum
+    error_message = db.Column(db.Text)  # eventually enum
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "author_id": self.author_id,
+            "goal": self.goal,
+            "bug": self.bug,
+            "error_message": self.error_message
+        }
+
+    def create(self):
+        pass
 
 
 class MetadataQuestion(db.Model):
     __tablename__ = 'metadata_questions'
 
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), primary_key=True)  # noqa
     time_question_opened = db.Column(db.String(10))
     time_question_answered = db.Column(db.String(10))
     time_question_closed = db.Column(db.String(10))
     # date = db.Column(db.Date)
     # categories = db.Column(db.String) enum
-    question = db.relationship("Question", backref=db.backref("metadata", uselist=False), uselist=False)
+    question = db.relationship("Question", backref=db.backref("metadata", uselist=False), uselist=False)  # noqa
 
 
 class Note(db.Model):
@@ -35,15 +47,23 @@ class Note(db.Model):
 class Resolution(db.Model):
     __tablename__ = 'resolutions'
 
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), primary_key=True)
+    question_id = db.Column(
+        db.Integer,
+        db.ForeignKey('questions.id'),
+        primary_key=True
+    )
+
     body = db.Column(db.Text)
 
-    question = db.relationship("Question", backref=db.backref("resolution", uselist=False), uselist=False)
+    question = db.relationship(
+        "Question",
+        backref=db.backref("resolution", uselist=False), uselist=False
+    )
 
 
 class AttachmentBase(db.Model):
     __tablename__ = 'attachments'
-    __mapper_args__= {
+    __mapper_args__ = {
         "polymorphic_identity": 'base',
         "polymorphic_on": 'attached_to'  # the descriminator
     }
