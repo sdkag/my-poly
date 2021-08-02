@@ -7,15 +7,21 @@ from sqlalchemy.dialects.postgresql import ENUM
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     __mapper_args__ = {
-        'polymorphic_identity': 'user',
+        # 'polymorphic_identity': 'user',
         'polymorphic_on': 'discriminant'
     }
 
-    DISCRIMINANT_TYPES = [
-        # key, value
-        ('stood', 'Student'),
-        ('ta', 'Teaching Assistant')
-    ]
+    # def __init__(username, email, password, discriminant):
+    #     self.username = username
+    #     self.email = email
+    #     self.password = password
+    #     self.discriminant = discriminant
+
+    # DISCRIMINANT_TYPES = [
+    #     # key, value
+    #     ('stood', 'Student'),
+    #     ('ta', 'Teaching Assistant')
+    # ]
     # TODO OAuth with github
     id = db.Column(db.Integer, primary_key=True)
     # github username
@@ -23,12 +29,15 @@ class User(db.Model, UserMixin):
     # github email
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
-    discriminant = db.Column(db.String(55), nullable=False)
+    discriminant = db.Column(
+        db.Enum("stood", "ta", name="role"),
+        nullable=False
+        )
 
-    @property
-    def related_role(self):
-        # can be built out to be a switch case fi there are more types of user.
-        return self.stood if self.discriminant('stood') else self.ta
+    # @property
+    # def related_role(self):
+    #     # can be built out to be a switch case fi there are more types of user.
+    #     return self.stood if self.discriminant('stood') else self.ta
     # ChoiceTypes, is essentially ENUM apparently there's some spiffy locale stuff you can do with this, but i don't really get locale
     # ChoiceType defaults to be a Unicode(255) column which is why in the docs you see u'stood' instead of 'stood', default is just that, so we only have to specify for ta's.
     # # the [0][0] nonsense is to keep it dynamic.
@@ -67,11 +76,12 @@ class User(db.Model, UserMixin):
 
 
 class Stood(User):
+    __tablename__ = 'stoods'
     __mapper_args__ = {
         'polymorphic_identity': 'stood'
     }
 
-    id = db.Column(
+    stoods_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
         primary_key=True
@@ -91,15 +101,21 @@ class Stood(User):
 
 
 class TA(User):
+    __tablename__ = 'tas'
     __mapper_args__ = {
         'polymorphic_identity': 'ta'
     }
 
-    id = db.Column(
+    ta_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
         primary_key=True
         )
 
     def to_dict(self):
-        return super().to_dict()
+        # return super().to_dict()
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email
+        }

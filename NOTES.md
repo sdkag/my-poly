@@ -1,5 +1,6 @@
 ```py
 from sqlalchemy_utils import ChoiceType
+# from sqlalchemy.dialects.postgresql import ENUM
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -24,5 +25,5 @@ class User(db.Model, UserMixin):
     # ChoiceType defaults to be a Unicode(255) column which is why in the docs you see u'stood' instead of 'stood', default is just that, so we only have to specify for ta's.
     # # the [0][0] nonsense is to keep it dynamic.
     # discriminant = db.Column(ChoiceType(DISCRIMINANT_TYPES, impl=db.String()),default=DISCRIMINANT_TYPES[0][0], nullable=False)
-    discriminant = db.Column(db.String(55), nullable=False)
+    discriminant = db.Column(db.Enum("student"), nullable=False)
 ```
