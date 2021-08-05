@@ -27,3 +27,31 @@ class User(db.Model, UserMixin):
     # discriminant = db.Column(ChoiceType(DISCRIMINANT_TYPES, impl=db.String()),default=DISCRIMINANT_TYPES[0][0], nullable=False)
     discriminant = db.Column(db.Enum("student"), nullable=False)
 ```
+
+
+events!
+
+from sqlalchemy import event
+
+```py
+@event.listens_for(SomeClass, 'init')
+def receive_init(target, args, kwargs):
+    "listen for the 'init' event"
+
+
+@event.listens_for(SomeClass.some_attribute, 'bulk_replace')
+def receive_bulk_replace(target, values, initiator):
+    "listen for the 'bulk_replace' event"
+
+    # ... (event handling logic) ...
+    # ... (event handling logic) ...
+
+class File(Base):
+    # ...
+
+    name = Column(String(64))
+    extension = Column(String(8))
+    filename = column_property(name + '.' + extension)
+    path = column_property('C:/' + filename.expression)
+
+```

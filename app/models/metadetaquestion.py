@@ -1,0 +1,13 @@
+from .db import db
+
+
+class MetadataQuestion(db.Model):
+    __tablename__ = 'metadata_questions'
+
+    question_id = db.Column(db.ForeignKey('questions.id'), primary_key=True)  # noqa
+    time_question_opened = db.Column(db.Time(10))
+    time_question_answered = db.Column(db.Time(10))
+    time_question_closed = db.Column(db.Time(10))
+    # date = db.Column(db.Date)
+    # categories = db.Column(db.String) enum
+    question = db.relationship("Question", backref=db.backref("metadata", uselist=False))  # noqa

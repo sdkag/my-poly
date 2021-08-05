@@ -1,11 +1,10 @@
 from .db import db
 
-
 class Question(db.Model):
     __tablename__ = 'questions'
 
     id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.ForeignKey('stoods.id'))
     goal = db.Column(db.Text)
     bug = db.Column(db.Text)
     error_message = db.Column(db.Text)  # eventually enum
@@ -23,41 +22,39 @@ class Question(db.Model):
         pass
 
 
-class MetadataQuestion(db.Model):
-    __tablename__ = 'metadata_questions'
-
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), primary_key=True)  # noqa
-    time_question_opened = db.Column(db.String(10))
-    time_question_answered = db.Column(db.String(10))
-    time_question_closed = db.Column(db.String(10))
-    # date = db.Column(db.Date)
-    # categories = db.Column(db.String) enum
-    question = db.relationship("Question", backref=db.backref("metadata", uselist=False), uselist=False)  # noqa
 
 
 class Note(db.Model):
     __tablename__ = 'notes'
 
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+    question_id = db.Column(db.ForeignKey('questions.id'))
+    body = db.Column(db.Text)
+    author_id = db.Column(db.ForeignKey('users.id'))
 
-    question = db.relationship("Question", backref="notes", uselist=False)
+    question = db.relationship("Question", backref="notes")
+
+
+all_the_joins = db.Table(
+    'attachment_entity',
+    db.Column(db.ForeignKey('attachments'))
+)
 
 
 class Resolution(db.Model):
     __tablename__ = 'resolutions'
 
     question_id = db.Column(
-        db.Integer,
         db.ForeignKey('questions.id'),
         primary_key=True
     )
 
     body = db.Column(db.Text)
-
+    author_id = db.Column(db.ForeignKey('tas.id'))
+    # a question can only have one resolution.
     question = db.relationship(
         "Question",
-        backref=db.backref("resolution", uselist=False), uselist=False
+        backref=db.backref("resolution", uselist=False)
     )
 
 
