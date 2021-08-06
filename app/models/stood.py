@@ -19,3 +19,10 @@ class Stood(User):
             "heroku_url": self.heroku_url,
             "scorecard_url": self.scorecard_url
         }
+
+    user = db.relationship(
+        'User',
+        uselist=False,
+        backref=(db.backref('stood', uselist=False)),
+        lazy='joined'
+    )

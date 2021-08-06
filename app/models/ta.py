@@ -14,6 +14,12 @@ class TA(User):
         nullable=False
     )
 
+    user = db.relationship(
+        'User',
+        backref=(db.backref('ta', uselist=False)),
+        lazy='joined'
+    )
+    
     # no to_dict method, because all ta_id should be the same
     # as the user.id so all info should be in user.id
     # right now, no point in having TA model...

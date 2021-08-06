@@ -23,19 +23,6 @@ class User(db.Model, UserMixin):
         nullable=False
     )
 
-    stood = db.relationship(
-        'Stood',
-        uselist=False,
-        backref=(db.backref('user', uselist=False)),
-        lazy='joined'
-        )
-
-    ta = db.relationship(
-        'TA',
-        uselist=False,
-        backref=(db.backref('user', uselist=False)),
-        lazy='joined'
-        )
 
     @property
     def password(self):
